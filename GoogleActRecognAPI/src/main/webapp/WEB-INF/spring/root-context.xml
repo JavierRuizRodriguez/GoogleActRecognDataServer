@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+	
+	<bean id="usuarioDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+	   <property name="sqlSessionFactory" ref="sqlSessionFactory"/>    
+	   <property name="mapperInterface" value="com.servidor.aceroDoc.rest.dao.UsuarioDao" />
+	</bean>	
+	
+	<bean id="rol" class= "com.servidor.aceroDoc.rest.entidades.Rol"></bean>
+
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+	<property name="host" value="smtp.gmail.com" />
+	<property name="port" value="587" />
+	<property name="username" value="jruizrdgz@gmail.com" />
+	<property name="password" value="*******" />
+ 
+	<property name="javaMailProperties">
+	   <props>
+       	      <prop key="mail.smtp.auth">true</prop>
+       	      <prop key="mail.smtp.starttls.enable">true</prop>
+       	   </props>
+	</property>
+</bean> 
+	<bean id="MailPropio" class="com.servidor.aceroDoc.rest.entidades.Mail">  
+	    <property name="mailSender" ref="mailSender" />  
+	</bean>  
+		
+	<bean id="dataSource"
+		class="org.apache.ibatis.datasource.pooled.PooledDataSource">
+		<property name="driver" value="org.postgresql.Driver"></property>
+		<property name="url"
+			value="jdbc:postgresql://localhost:5432/acerodoc">
+		</property>
+		<property name="username" value="postgres"></property>
+		<property name="password" value="postgres"></property>
+	</bean>
+		  
+	<bean id="sqlSessionFactory"
+		class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="configLocation"	value="classpath:/mybatis/mybatis-config.xml">
+		</property>	
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	<bean id="sqlSession"
+		class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg ref="sqlSessionFactory"></constructor-arg>
+	</bean>
+</beans>

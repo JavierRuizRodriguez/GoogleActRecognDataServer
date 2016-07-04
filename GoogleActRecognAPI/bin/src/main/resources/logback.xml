@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+	<appender name="sistema" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<Pattern>
+				%d{HH:mm:ss.SSS} [%thread] %-5level sys.%logger{33} - %msg	%n
+			</Pattern>
+		</encoder>
+	</appender>
+
+	<appender name="propio" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<Pattern>
+				%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg %n
+			</Pattern>
+		</encoder>
+	</appender>
+
+	<appender name="eventos" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<Pattern>
+				%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg %n
+			</Pattern>
+		</encoder>
+	</appender>
+
+	<appender name="rest" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<Pattern>
+				%d{HH:mm:ss.SSS} [%thread] %-5level %logger{15} -
+				RemoteHost: %X{ip} Message: %msg %n
+			</Pattern>
+		</encoder>
+	</appender>
+	
+	<appender name="login" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<Pattern>
+				%d{HH:mm:ss.SSS} %logger{15} - %X{authenticated}, %X{ip}, %X{user}, %X{roles} %n
+			</Pattern>
+		</encoder>
+	</appender>
+	
+	<appender name="cifrado" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<Pattern>
+				%d{HH:mm:ss.SSS} [%thread] %logger{15} - %msg %n
+			</Pattern>
+		</encoder>
+	</appender>
+
+	<logger name="com.acerodocs.api" level="info" additivity="false">
+		<appender-ref ref="propio" />
+	</logger>
+
+	<logger name="com.acerodocs.api.rest.controller" level="info"
+		additivity="false">
+		<appender-ref ref="rest" />
+	</logger>
+
+	<logger name="com.acerodocs.api.test.logback" level="info"
+		additivity="false">
+		<appender-ref ref="rest" />
+	</logger>
+
+	<logger name="com.acerodocs.api.concurrent" level="info"
+		additivity="false">
+		<appender-ref ref="eventos" />
+	</logger>
+
+	<logger name="com.acerodocs.api.events" level="info" additivity="false">
+		<appender-ref ref="eventos" />
+	</logger>
+
+	<logger name="com.acerodocs.api.security.cifrado" level="info"
+		additivity="false">
+		<appender-ref ref="cifrado" />
+	</logger>
+
+	<logger name="com.acerodocs.api.security.login" level="info"
+		additivity="false">
+		<appender-ref ref="login" />
+	</logger>
+
+	<root level="info">
+		<appender-ref ref="sistema" />
+	</root>
+
+</configuration>

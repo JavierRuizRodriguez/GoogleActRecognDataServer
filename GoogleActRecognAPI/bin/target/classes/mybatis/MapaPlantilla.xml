@@ -1,0 +1,22 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.acerodocs.api.db.dao.PostgreSQLService">
+
+	<!-- ************** READ ************** -->
+	<select id="getPlantillaByTag" resultType="com.acerodocs.api.db.entities.Plantilla">
+		SELECT
+		*
+		FROM
+		plantilla_
+		WHERE
+		tag = #{tag}
+	</select>
+
+	<select id="getAllPlantilla" resultType="com.acerodocs.api.db.entities.Plantilla">
+		SELECT
+		*
+		FROM
+		plantilla_
+	</select>
+</mapper>

@@ -1,0 +1,180 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.acerodocs.api.db.dao.PostgreSQLService">
+
+	<!-- ************** READ ************** -->
+	<select id="getFileList" resultType="com.acerodocs.api.db.entities.ArchivoDB">
+		SELECT
+		*
+		FROM "archivosDB"
+		WHERE mail =#{mail} and enabled=true
+	</select>
+
+	<select id="getTrash" resultType="com.acerodocs.api.db.entities.ArchivoDB">
+		SELECT
+		adb."fileHashTC","fileName", adb.timestamp_, t.timestamp_ as timeout_
+		FROM "archivosDB" as adb INNER JOIN trash as t ON (adb."fileHashTC" =
+		t."fileHashTC")
+		WHERE adb.mail=#{mail};
+	</select>
+
+	<!-- TODO -->
+	<select id="syncFiles" resultType="com.acerodocs.api.db.entities.SyncFile">
+		SELECT
+		adb.mail, fk.password_,
+		adb."fileHashTC", adb."fileHashTP", adb."fileName",
+		fk.shared
+		FROM
+		"archivosDB" as adb INNER JOIN fileKey as fk
+		ON
+		(adb."fileHashTC" =
+		fk."fileHashTC")
+		WHERE fk.mail = #{mail} and
+		adb.enabled = true and
+		fk.enabled = true
+	</select>
+
+	<insert id="insertarHashArchivo" parameterType="com.acerodocs.api.db.entities.ArchivoDB">
+		INSERT INTO
+		"archivosDB" (mail,"fileHashTP", "fileHashTC", "fileName",
+		timestamp_,
+		timeout_, opened, enabled, type, irmable)
+		VALUES
+		(
+		#{mail},#{fileHashTP},#{fileHashTC},#{fileName},
+		now(), #{timeout_},
+		false, true, #{type}, #{irmable});
+	</insert>
+
+	<update id="setOpened" parameterType="com.acerodocs.api.db.entities.ArchivoDB">
+		UPDATE "archivosDB"
+		SET
+		opened=#{opened}
+		WHERE "fileHashTC"=#{fileHashTC} AND mail=#{mail}
+	</update>
+
+	<update id="updateArchivoDBType" parameterType="com.acerodocs.api.db.entities.ArchivoDB">
+		UPDATE
+		"archivosDB" SET type=#{type} WHERE "fileHashTC"=#{fileHashTC} AND mail=#{mail}
+	</update>
+
+	<update id="updateFileKeyType" parameterType="com.acerodocs.api.db.entities.FileKey">
+		UPDATE fileKey SET
+		password_=#{password_}, shared=#{shared} WHERE
+		"fileHashTC"=#{fileHashTC} AND  mail=#{mail}
+	</update>
+
+	<update id="setImportant" parameterType="com.acerodocs.api.db.entities.ArchivoDB">
+		UPDATE "archivosDB"
+		SET
+		important=#{important}
+		WHERE "fileHashTC"=#{fileHashTC} AND
+		mail=#{mail}
+	</update>
+
+	<update id="setArchivoDBEnabled" parameterType="com.acerodocs.api.db.entities.ArchivoDB">
+		UPDATE
+		"archivosDB"
+		SET enabled=#{enabled}
+		WHERE "fileHashTC"=#{fileHashTC} and
+		mail=#{mail}
+	</update>
+
+	<insert id="insertaFileKey" parameterType="com.acerodocs.api.db.entities.FileKey">
+		INSERT INTO
+		fileKey
+		(mail, "fileHashTC", password_, shared, enabled,
+		timestamp_) VALUES
+		(
+		#{mail},#{fileHashTC},#{password_}, #{shared}, true,
+		now());
+	</insert>
+
+	<update id="setFileKeyEnabled" parameterType="com.acerodocs.api.db.entities.FileKey">
+		UPDATE fileKey
+		SET
+		enabled=#{enabled}
+		WHERE
+		"fileHashTC"=#{fileHashTC} AND mail=#{mail}
+	</update>
+	<delete id="deleteUserArchivoDBByHash" parameterType="com.acerodocs.api.db.entities.ArchivoDB">
+		DELETE FROM
+		"archivosDB" WHERE "fileHashTC" = #{fileHashTC} AND mail=#{mail}
+	</delete>
+
+	<delete id="deleteFileKeyByHashAndMail" parameterType="com.acerodocs.api.db.entities.FileKey">
+		DELETE
+		FROM
+		filekey WHERE "fileHashTC"=#{fileHashTC} AND mail=#{mail}
+	</delete>
+
+	<delete id="deleteOldTrashFiles" parameterType="Integer">
+		DELETE FROM "archivosDB" USING trash
+		WHERE
+		trash."fileHashTC"="archivosDB"."fileHashTC"
+		AND trash.timestamp_ <![CDATA[<]]>
+		(NOW() - INTERVAL '${value} days');
+	</delete>
+
+	<select id="getArchivoFromHashTC" parameterType="String"
+		resultType="com.acerodocs.api.db.entities.ArchivoDB">
+		SELECT * FROM
+		"archivosDB" WHERE "fileHashTC"=#{fileHashTC}
+		AND enabled=true
+	</select>
+
+	<!-- ONLY WORKS FOR >=POSTGRESQL9.5 -->
+	<!-- UPSERT -->
+	<insert id="setNote" parameterType="com.acerodocs.api.db.entities.Note">
+
+		INSERT INTO note
+		("fileHashTC", note, timestamp_) VALUES (#{fileHashTC},
+		#{note}, now())
+		ON CONFLICT
+		("fileHashTC") DO UPDATE SET note=#{note},
+		timestamp_=now()
+
+	</insert>
+
+	<insert id="insertNote" parameterType="com.acerodocs.api.db.entities.Note">
+		INSERT INTO note
+		("fileHashTC", note, timestamp_) VALUES (#{fileHashTC}, #{note},
+		now());
+	</insert>
+
+	<update id="updateNote" parameterType="com.acerodocs.api.db.entities.Note">
+		UPDATE note
+		SET
+		note=#{note}, timestamp_=now() WHERE "fileHashTC"=#{fileHashTC};
+	</update>
+
+	<select id="getNote" parameterType="String"
+		resultType="com.acerodocs.api.db.entities.Note">
+		SELECT * FROM note WHERE
+		"fileHashTC"=#{hash}
+	</select>
+
+	<select id="getArchivoFromHashTCAndAuthor" parameterType="com.acerodocs.api.db.entities.ArchivoDB"
+		resultType="com.acerodocs.api.db.entities.ArchivoDB">
+		SELECT * FROM
+		"archivosDB" WHERE "fileHashTC"=#{fileHashTC}
+		AND mail=#{mail}
+	</select>
+
+	<select id="getArchivoFromHashTP" parameterType="String"
+		resultType="com.acerodocs.api.db.entities.ArchivoDB">
+		SELECT * FROM
+		"archivosDB" WHERE "fileHashTP"=#{fileHashTP}
+		AND enabled=true
+	</select>
+
+	<select id="getFileKeyFromHashTCAndMail" parameterType="com.acerodocs.api.db.entities.FileKey"
+		resultType="com.acerodocs.api.db.entities.FileKey">
+		SELECT * FROM fileKey WHERE ("fileHashTC"=#{fileHashTC} AND
+		(mail=#{mail} OR
+		shared=true)) AND enabled=true
+	</select>
+
+
+</mapper>

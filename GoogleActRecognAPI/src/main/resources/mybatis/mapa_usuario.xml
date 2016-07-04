@@ -1,0 +1,62 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.servidor.aceroDoc.rest.dao.UsuarioDao">
+
+    <!-- ************** CREATE ************** -->
+ 	<insert id="new_user" parameterType="com.servidor.aceroDoc.rest.entidades.Usuario">
+		INSERT INTO user_ (mail, username, password, name, last_name, enabled) VALUES 
+			(#{mail}, #{username}, #{password}, #{name}, #{last_name}, false)
+	</insert>
+	<insert id="new_role" parameterType="com.servidor.aceroDoc.rest.entidades.Rol">
+		INSERT INTO role (id_user_role, mail, authority) VALUES 
+			(DEFAULT, #{mail}, #{rol})
+	</insert> 
+		 				 
+  	<!-- ************** READ ************** -->
+    <select id="get_users" resultType="com.servidor.aceroDoc.rest.entidades.Usuario">
+        SELECT
+            mail, username, password, name, last_name
+        FROM
+            user_
+    </select>
+    
+    <select id="get_user_by_mail" parameterType="String" resultType="com.servidor.aceroDoc.rest.entidades.Usuario">
+        SELECT
+             mail, username, password, name, last_name
+        FROM
+             user_ 
+        WHERE
+        	mail = #{value}          	            	
+    </select>
+     	
+ 	<!-- ************** UPDATE ************** -->
+ 	<update id="update_user" parameterType="com.servidor.aceroDoc.rest.entidades.Usuario">
+		UPDATE 
+			user_
+		SET 
+			mail = #{mail}
+			<if test="username != null">
+				,username = #{username}
+			</if>
+			<if test="password != null">
+				,password = #{password}
+			</if>
+			<if test="name != null">
+				,name = #{name}
+			</if>
+			<if test="last_name != null">
+				,last_name = #{last_name}
+			</if>
+			<if test="enabled != null">
+				,enabled = #{enabled}
+			</if>					
+		WHERE
+			mail = #{mail}
+ 	</update>   	
+ 	
+ 	<!-- ************** DELETE ************** -->
+	<delete id="delete_user_by_mail" parameterType="String">
+		DELETE FROM user_ WHERE mail = #{value}
+	</delete>
+</mapper>

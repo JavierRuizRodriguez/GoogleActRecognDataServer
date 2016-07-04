@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration> 
+	<property name="DIR_LOG" value="C:\espacio_trabajo\logs_servidor_acerodoc" /> 
+	<appender name="FILE-THREAD" class="ch.qos.logback.classic.sift.SiftingAppender"> 
+	   	<discriminator>
+			<key>NombreFicheroLog</key>
+			<defaultValue>cabezera0</defaultValue>
+	  	</discriminator> 
+	  	<sift>	 
+			<appender name="FILE-${NombreFicheroLog}" class="ch.qos.logback.core.rolling.RollingFileAppender">
+				<file>${DIR_LOG}/${NombreFicheroLog}.log</file>	 
+				<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+					<Pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %level %logger{35} - %msg%n	</Pattern>
+				</encoder>	 
+				<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+					<FileNamePattern>${DIR_LOG}/${NombreFicheroLog}.%i.log.zip</FileNamePattern>
+					<MinIndex>1</MinIndex>
+					<MaxIndex>10</MaxIndex>
+				</rollingPolicy>	 
+				<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+					<MaxFileSize>10MB</MaxFileSize>
+				</triggeringPolicy>	 
+			</appender>	 
+		</sift>	
+	</appender> 
+	<logger name="com.servidor.aceroDoc.rest" level="debug"	additivity="false">
+		<appender-ref ref="FILE-THREAD" />
+	</logger> 
+	<root level="error">
+		<appender-ref ref="FILE-THREAD" />
+	</root> 
+</configuration>
