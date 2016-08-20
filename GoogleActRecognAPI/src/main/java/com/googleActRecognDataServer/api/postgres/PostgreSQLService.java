@@ -1,13 +1,13 @@
 package com.googleActRecognDataServer.api.postgres;
 
-import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
-import com.googleActRecognDataServer.api.postgres.pojos.Prueba;
+import com.googleActRecognDataServer.api.postgres.pojos.ActividadGoogle;
 
 public interface PostgreSQLService {
 
-	public List<Prueba> getPruebas();
-	
-	public Prueba getUnaPrueba(String nombre);
+	public void nuevaActividad(@Param("id") String idCliente, @Param("actividad") ActividadGoogle actividad);
+
+	public void nuevoIdCliente(String idCliente);
 
 }

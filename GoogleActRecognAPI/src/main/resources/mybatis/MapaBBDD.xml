@@ -1,0 +1,41 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.googleActRecognDataServer.api.postgres.PostgreSQLService">
+
+	<insert id="nuevaActividad" parameterType="map">
+		INSERT INTO
+		actividad
+		(actividad, _id, coeficiente, _timestamp)
+		VALUES
+		(#{actividad.actividad}, #{id}, #{actividad.coeficiente},
+		now())
+	</insert>
+
+	<insert id="nuevoIdCliente" parameterType="String">
+		INSERT INTO
+		cliente
+		(_id)
+		VALUES
+		(#{value})
+	</insert>
+
+	<!-- ************** READ ************** 
+	<select id="getPruebas"
+		resultType="com.googleActRecognDataServer.api.postgres.pojos.Prueba">
+		SELECT
+		*
+		FROM "tPrueba";
+	</select>
+
+	<select id="getUnaPrueba"
+		resultType="com.googleActRecognDataServer.api.postgres.pojos.Prueba">
+		SELECT
+		*
+		FROM "tPrueba"
+		WHERE nombre=#{nombre};
+	</select> -->
+
+
+
+</mapper>

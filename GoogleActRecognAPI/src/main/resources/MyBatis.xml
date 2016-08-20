@@ -6,7 +6,7 @@
 
 	<bean id="dataSource" class="org.apache.ibatis.datasource.pooled.PooledDataSource">
 		<property name="driver" value="org.postgresql.Driver"></property>
-		<property name="url" value="jdbc:postgresql://localhost:5432/prueba"></property>
+		<property name="url" value="jdbc:postgresql://localhost:5432/ActivityRecognition"></property>
 		<property name="username" value="postgres"></property>
 		<property name="password" value="postgres"></property>
 	</bean>

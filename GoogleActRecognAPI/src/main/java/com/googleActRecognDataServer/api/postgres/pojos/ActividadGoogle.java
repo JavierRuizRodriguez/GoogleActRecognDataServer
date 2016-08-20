@@ -1,10 +1,12 @@
-package com.googleActRecognDataServer.api.pojo;
+package com.googleActRecognDataServer.api.postgres.pojos;
 
-public class ActividadesGoogle {
+public class ActividadGoogle {
 	public String actividad;
 	public int coeficiente;
 	
-	public ActividadesGoogle(String actividad, int coeficiente) {
+	public ActividadGoogle(){}
+	
+	public ActividadGoogle(String actividad, int coeficiente) {
 		super();
 		this.actividad = actividad;
 		this.coeficiente = coeficiente;
