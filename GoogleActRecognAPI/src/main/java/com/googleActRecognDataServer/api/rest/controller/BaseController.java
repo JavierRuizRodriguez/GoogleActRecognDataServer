@@ -1,5 +1,6 @@
 package com.googleActRecognDataServer.api.rest.controller;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,14 +13,14 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.mockito.internal.configuration.injection.MockInjectionStrategy;
 import org.postgresql.util.PSQLException;
+import org.rosuda.JRI.Rengine;
 
 import com.googleActRecognDataServer.api.postgres.daos.OperacionesActividades;
 import com.googleActRecognDataServer.api.postgres.daos.OperacionesIdClientes;
 import com.googleActRecognDataServer.api.postgres.pojos.ActividadGoogle;
-import com.sun.jmx.snmp.Timestamp;
+import com.googleActRecognDataServer.api.postgres.pojos.IdsCliente;
 
 @Path("/")
 public class BaseController {
@@ -32,6 +33,27 @@ public class BaseController {
 	@Path("status")
 	public Response status() {
 		System.out.println("RECIBIDO status");
+
+		/*
+		 * String javaVector = "c(1,2,3,4,5)";
+		 * 
+		 * // Start Rengine. Rengine engine = new Rengine(new String[] {
+		 * "--no-save" }, false, null);
+		 * 
+		 * // The vector that was created in JAVA context is stored in 'rVector'
+		 * which is a variable in R context. engine.eval("rVector=" +
+		 * javaVector);
+		 * 
+		 * //Calculate MEAN of vector using R syntax.
+		 * engine.eval("meanVal=mean(rVector)");
+		 * 
+		 * //Retrieve MEAN value double mean =
+		 * engine.eval("meanVal").asDouble();
+		 * 
+		 * //Print output values System.out.println("Mean of given vector is=" +
+		 * mean);
+		 */
+
 		return Response.status(200).entity("OK").build();
 	}
 
@@ -39,18 +61,17 @@ public class BaseController {
 	@Path("data")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.TEXT_HTML })
-	public Response nuevosDatos(ArrayList<ActividadGoogle> actividades, @Context HttpServletRequest peticion) throws PSQLException {
-
-		System.out.println("RECIBIDO " + new Timestamp(date.getTime()));
-		System.out.println("BANDERA --> " + peticion.getHeader("Bandera"));
-		System.out.println("ID cliente --> " + peticion.getHeader("IDcliente"));
-
-		String id = peticion.getHeader("IDcliente");
+	public Response nuevosDatos(ArrayList<ActividadGoogle> actividades, @Context HttpServletRequest peticion)
+			throws PSQLException {
+		
+		System.out.println("----- SINCRO DATOS NUEVOS -----");
+		mostrarDatosEnConsola(peticion);
+		IdsCliente ids = new IdsCliente(peticion.getHeader("advIdCliente"), peticion.getHeader("insIdCliente"));
 
 		if (actividades.size() != 0) {
 
-			//pIdCliente.insertarNuevoIdCliente(id);
-			opActividades.insertarNuevasActividades(id, actividades);
+			opIdCliente.insertarNuevoIdCliente(ids);
+			opActividades.insertarNuevasActividades(ids, actividades);
 
 			return Response.status(201).entity("Datos recibidos.").build();
 
@@ -60,17 +81,28 @@ public class BaseController {
 
 	}
 
-	@GET
+	@POST
 	@Path("oldData")
-	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.TEXT_HTML })
 	public Response nuevosDatos(@Context HttpServletRequest peticion) {
-		System.out.println("ID cliente --> " + peticion.getHeader("IDcliente"));
 
-		// coger ultima bandera introducida para el idCliente y replicarla con
-		// un nuevo timestamp
+		System.out.println("----- SINCRO DATOS VIEJOS -----");
+		mostrarDatosEnConsola(peticion);
+		
 
-		return Response.status(201).entity("Datos recibidos.").build();
+		IdsCliente ids = new IdsCliente(peticion.getHeader("advIdCliente"), peticion.getHeader("insIdCliente"));
+		try {
+			opActividades.insertarNuevasActividades(ids, opActividades.cogerUltimaActividadPorIds(ids));
+			return Response.status(201).entity("Datos recibidos.").build();
+		} catch (Exception e) {
+			return Response.status(400).entity("ERROR").build();
+		}
+	}
 
+	private void mostrarDatosEnConsola(HttpServletRequest peticion) {
+		System.out.println("RECIBIDO " + new Timestamp(date.getTime()));
+		System.out.println("BANDERA --> " + peticion.getHeader("Bandera"));
+		System.out.println("ID cliente --> " + peticion.getHeader("advIdCliente"));
+		System.out.println("ID cliente --> " + peticion.getHeader("insIdCliente"));
 	}
 }

@@ -7,7 +7,6 @@ public class ActividadGoogle {
 	public ActividadGoogle(){}
 	
 	public ActividadGoogle(String actividad, int coeficiente) {
-		super();
 		this.actividad = actividad;
 		this.coeficiente = coeficiente;
 	}

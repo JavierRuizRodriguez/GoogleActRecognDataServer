@@ -6,35 +6,39 @@
 	<insert id="nuevaActividad" parameterType="map">
 		INSERT INTO
 		actividad
-		(actividad, _id, coeficiente, _timestamp)
+		(actividad, coeficiente, _timestamp, "advIdCliente", "insIdCliente")
 		VALUES
-		(#{actividad.actividad}, #{id}, #{actividad.coeficiente},
-		now())
+		(#{actividad.actividad}, #{actividad.coeficiente},
+		now(),
+		#{ids.advIdCliente}, #{ids.insIdCliente})
 	</insert>
 
-	<insert id="nuevoIdCliente" parameterType="String">
+	<insert id="nuevoIdCliente" parameterType="map">
 		INSERT INTO
 		cliente
-		(_id)
+		("advIdCliente", "insIdCliente")
 		VALUES
-		(#{value})
+		(#{ids.advIdCliente},
+		#{ids.insIdCliente})
 	</insert>
 
-	<!-- ************** READ ************** 
-	<select id="getPruebas"
-		resultType="com.googleActRecognDataServer.api.postgres.pojos.Prueba">
-		SELECT
-		*
-		FROM "tPrueba";
+	<!-- ************** READ ************** -->
+	<select id="cogerUltimaActividadPorIds"
+		resultType="com.googleActRecognDataServer.api.postgres.pojos.ActividadGoogle">
+		SELECT actividad, coeficiente
+		FROM actividad
+		WHERE
+		"advIdCliente" = #{ids.advIdCliente} AND
+		"insIdCliente" =
+		#{ids.insIdCliente} AND date_trunc('second',cast(_timestamp
+		as time)) =
+		(SELECT date_trunc('second',cast(_timestamp as time)) FROM
+		actividad
+		ORDER BY _timestamp DESC LIMIT 1);
 	</select>
-
-	<select id="getUnaPrueba"
-		resultType="com.googleActRecognDataServer.api.postgres.pojos.Prueba">
-		SELECT
-		*
-		FROM "tPrueba"
-		WHERE nombre=#{nombre};
-	</select> -->
+	
+	<!-- <select id="getUnaPrueba" resultType="com.googleActRecognDataServer.api.postgres.pojos.Prueba"> 
+		SELECT * FROM "tPrueba" WHERE nombre=#{nombre}; </select> -->
 
 
 

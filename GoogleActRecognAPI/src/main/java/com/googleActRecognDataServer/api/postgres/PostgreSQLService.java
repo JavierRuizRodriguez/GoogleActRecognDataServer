@@ -1,13 +1,18 @@
 package com.googleActRecognDataServer.api.postgres;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 
 import com.googleActRecognDataServer.api.postgres.pojos.ActividadGoogle;
+import com.googleActRecognDataServer.api.postgres.pojos.IdsCliente;
 
 public interface PostgreSQLService {
 
-	public void nuevaActividad(@Param("id") String idCliente, @Param("actividad") ActividadGoogle actividad);
+	public void nuevaActividad(@Param("ids") IdsCliente ids, @Param("actividad") ActividadGoogle actividad);
 
-	public void nuevoIdCliente(String idCliente);
+	public void nuevoIdCliente(@Param("ids") IdsCliente ids);
+	
+	public List<ActividadGoogle> cogerUltimaActividadPorIds(@Param("ids") IdsCliente ids);
 
 }
