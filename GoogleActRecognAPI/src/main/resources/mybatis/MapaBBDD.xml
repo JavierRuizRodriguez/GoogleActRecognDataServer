@@ -6,11 +6,12 @@
 	<insert id="nuevaActividad" parameterType="map">
 		INSERT INTO
 		actividad
-		(actividad, coeficiente, _timestamp, "advIdCliente", "insIdCliente")
+		(actividad, coeficiente, _timestamp, "advIdCliente", "insIdCliente",
+		bandera)
 		VALUES
 		(#{actividad.actividad}, #{actividad.coeficiente},
 		now(),
-		#{ids.advIdCliente}, #{ids.insIdCliente})
+		#{ids.advIdCliente}, #{ids.insIdCliente}, #{bandera})
 	</insert>
 
 	<insert id="nuevoIdCliente" parameterType="map">
@@ -36,10 +37,35 @@
 		actividad
 		ORDER BY _timestamp DESC LIMIT 1);
 	</select>
-	
-	<!-- <select id="getUnaPrueba" resultType="com.googleActRecognDataServer.api.postgres.pojos.Prueba"> 
-		SELECT * FROM "tPrueba" WHERE nombre=#{nombre}; </select> -->
 
+	<select id="cogerUltimaBanderaPorIds"
+		resultType="String">
+		SELECT bandera
+		FROM actividad
+		WHERE
+		"advIdCliente" =
+		#{ids.advIdCliente} AND
+		"insIdCliente" =
+		#{ids.insIdCliente} AND
+		date_trunc('second',cast(_timestamp
+		as time)) =
+		(SELECT
+		date_trunc('second',cast(_timestamp as time)) FROM
+		actividad
+		ORDER BY
+		_timestamp DESC LIMIT 1);
+	</select>
 
+	<select id="cogerActividadesUltimoDia"
+		resultType="com.googleActRecognDataServer.api.postgres.pojos.ActividadBandera">
+		SELECT actividad, bandera
+		FROM actividad
+		WHERE
+		(current_time::time -
+		_timestamp::time) <![CDATA[ <= interval
+		'1' day ]]>
+		;
+
+	</select>
 
 </mapper>
