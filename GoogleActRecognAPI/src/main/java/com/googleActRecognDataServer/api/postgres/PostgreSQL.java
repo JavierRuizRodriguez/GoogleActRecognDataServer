@@ -7,45 +7,48 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 
 /**
- * Class to instance 'PostgreSQLService' interface.
+ * Clase que registra el bean de conexión a la base de datos.
  * 
- * @author AceroDocs
- *
+ * @author Javier Ruiz Rodríguez
+ * 
  */
-
 @Configuration
 @ImportResource("classpath:/MyBatis.xml")
 public class PostgreSQL {
 
 	/**
-	 * Interface instance 'PostgreSQLService'.
+	 * Representa una instancia de la clase ServicioPostgreSQL.java
 	 */
 	private static SqlSessionFactory factory;
 
 	/**
-	 * Method that initiates 'PostgreSQLService' variable.
+	 * Método que sirve para instanciar la variable 'factory'.
 	 * 
-	 * @param postgreSQLService
+	 * @param factory representa un objeto de la clase ServicioPostgreSQL.
 	 */
-
 	@Autowired
 	public void setFactory(SqlSessionFactory factory) {
 		PostgreSQL.factory = factory;
 	}
 
+	/**
+	 * Método para coger la variable 'factory'.
+	 * 
+	 * @return instancia de 'factory'.
+	 */
 	public static SqlSessionFactory getFactory() {
 		return factory;
 	}
-	
 
 	/**
-	 * Method to get 'postgreSQLService' variable value.
+	 * Método para coger el valor de la variable instanciada de la clase
+	 * ServicioPostgreSQL.java.
 	 * 
-	 * @return postgreSQLService 'postgreSQLService' object.
+	 * @return objeto del tipo ServicioPostgreSQL.
 	 */
-	public static PostgreSQLService getPostgresInterface() {
-		SqlSessionTemplate sessionTemplate = new SqlSessionTemplate(getFactory());
-		return sessionTemplate.getMapper(PostgreSQLService.class);
+	public static ServicioPostgreSQL getInterfazPostgreSQL() {
+		SqlSessionTemplate plantillaSesionPostgreSQL = new SqlSessionTemplate(getFactory());
+		return plantillaSesionPostgreSQL.getMapper(ServicioPostgreSQL.class);
 	}
 
 }

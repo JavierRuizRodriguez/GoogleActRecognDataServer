@@ -13,12 +13,22 @@ import com.googleActRecognDataServer.api.postgres.pojos.ActividadBandera;
 import com.googleActRecognDataServer.api.postgres.pojos.ActividadGoogle;
 import com.googleActRecognDataServer.api.postgres.pojos.IdsCliente;
 
+/**
+ * Clase que define la implementación de los métodos que se ejecutarán sobre la
+ * tabla 'actividad'.
+ * 
+ * @author Javier Ruiz Rodríguez
+ *
+ */
 public class OperacionesActividades extends OperacionesBD {
 
+	/**
+	 * Constructor de clase que inicializa el log.
+	 */
 	public OperacionesActividades() {
 		try {
-			if(fh == null)
-				fh = new FileHandler("logAccesoBBDD.log", TAM_MAX_LOG, 10, true);
+			if (fh == null)
+				fh = new FileHandler("logs/logAccesoBBDD.log", TAM_MAX_LOG, 10, true);
 			logAccesoBBDD.addHandler(fh);
 		} catch (SecurityException e) {
 			e.printStackTrace();
@@ -27,13 +37,16 @@ public class OperacionesActividades extends OperacionesBD {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void insertarNuevasActividades(IdsCliente ids, List<ActividadGoogle> actividades, String bandera)
 			throws DataAccessException {
 
 		for (ActividadGoogle actividad : actividades) {
 			try {
-				PostgreSQL.getPostgresInterface().nuevaActividad(ids, actividad, bandera);
+				PostgreSQL.getInterfazPostgreSQL().nuevaActividad(ids, actividad, bandera);
 			} catch (DuplicateKeyException e) {
 				logAccesoBBDD.info("PK duplicada actividad");
 			} catch (DataAccessException e) {
@@ -41,19 +54,20 @@ public class OperacionesActividades extends OperacionesBD {
 			}
 		}
 	}
-	
+
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	public List<ActividadGoogle> cogerUltimaActividadPorIds(IdsCliente ids) throws DataAccessException {
-		return new ArrayList<ActividadGoogle>(PostgreSQL.getPostgresInterface().cogerUltimaActividadPorIds(ids));
+	public List<ActividadBandera> cogerActividadesUltimoDiaDeCliente(IdsCliente ids) {
+		return new ArrayList<ActividadBandera>(PostgreSQL.getInterfazPostgreSQL().cogerActividadesUltimoDiaDeCliente(ids));
 	}
 	
-	@Override
-	public String cogerUltimaBanderaPorIds(IdsCliente ids) throws DataAccessException {
-		return PostgreSQL.getPostgresInterface().cogerUltimaBanderaPorIds(ids);
-	}
-	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public List<ActividadBandera> cogerActividadesUltimoDia() {
-		return new ArrayList<ActividadBandera>(PostgreSQL.getPostgresInterface().cogerActividadesUltimoDia());
+		return new ArrayList<ActividadBandera>(PostgreSQL.getInterfazPostgreSQL().cogerActividadesUltimoDia());
 	}
 }

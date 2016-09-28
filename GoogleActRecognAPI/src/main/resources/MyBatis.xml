@@ -20,11 +20,11 @@
 		</property>
 	</bean>
 
-	<!-- MAPPERS -->
+	<!-- MAPAS -->
 
 	<bean id="interfaz_postgres" class="org.mybatis.spring.mapper.MapperFactoryBean">
 		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
-		<property name="mapperInterface" value="com.googleActRecognDataServer.api.postgres.PostgreSQLService" />
+		<property name="mapperInterface" value="com.googleActRecognDataServer.api.postgres.ServicioPostgreSQL" />
 	</bean>
 
 </beans>

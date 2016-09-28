@@ -25,10 +25,11 @@
 	</properties>
 
 	<dependencies>
+
 		<dependency>
-			<groupId>com.googlecode.juniversalchardet</groupId>
-			<artifactId>juniversalchardet</artifactId>
-			<version>1.0.3</version>
+			<groupId>com.itextpdf</groupId>
+			<artifactId>itextpdf</artifactId>
+			<version>5.0.6</version>
 		</dependency>
 
 		<dependency>
@@ -48,16 +49,6 @@
 			<artifactId>postgresql</artifactId>
 			<version>9.3-1100-jdbc41</version>
 		</dependency>
-
-		<dependency>
-			<groupId>org.bouncycastle</groupId>
-			<artifactId>bcprov-jdk16</artifactId>
-			<version>1.46</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-mail</artifactId>
-		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-jdbc</artifactId>
@@ -68,26 +59,6 @@
 			<version>2.0.1</version>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.glassfish.jersey.media</groupId>
-			<artifactId>jersey-media-multipart</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.glassfish.jersey.containers</groupId>
-			<artifactId>jersey-container-servlet</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>org.glassfish.jersey.core</groupId>
 			<artifactId>jersey-server</artifactId>
 		</dependency>
@@ -95,8 +66,6 @@
 			<groupId>org.glassfish.jersey.core</groupId>
 			<artifactId>jersey-common</artifactId>
 		</dependency>
-
-		<!-- WINDOWS -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
@@ -112,32 +81,6 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-velocity</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-solr</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.directory.studio</groupId>
-			<artifactId>org.apache.commons.codec</artifactId>
-			<version>1.8</version>
-		</dependency>
-		<dependency>
-			<groupId>org.json</groupId>
-			<artifactId>json</artifactId>
-			<version>20141113</version>
-		</dependency>
-
-		<dependency>
-			<!-- jsoup HTML parser library @ http://jsoup.org/ -->
-			<groupId>org.jsoup</groupId>
-			<artifactId>jsoup</artifactId>
-			<version>1.8.2</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-tomcat</artifactId>
 			<scope>provided</scope>
 		</dependency>
@@ -149,17 +92,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-rest</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>commons-httpclient</groupId>
-			<artifactId>commons-httpclient</artifactId>
-			<version>3.1</version>
-		</dependency>
-		<dependency>
-			<groupId>com.itextpdf</groupId>
-			<artifactId>itextpdf</artifactId>
-			<version>5.0.6</version>
-		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-integration</artifactId>
@@ -179,7 +111,7 @@
 		</plugins>
 	</build>
 
-	<name>acerodocs_api</name>
+	<name>googleActRecognDataServer</name>
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -205,11 +137,6 @@
 			<dependency>
 				<groupId>org.glassfish.jersey.ext</groupId>
 				<artifactId>jersey-spring3</artifactId>
-				<version>2.14</version>
-			</dependency>
-			<dependency>
-				<groupId>org.glassfish.jersey.media</groupId>
-				<artifactId>jersey-media-multipart</artifactId>
 				<version>2.14</version>
 			</dependency>
 		</dependencies>

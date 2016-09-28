@@ -1,7 +1,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.googleActRecognDataServer.api.postgres.PostgreSQLService">
+<mapper namespace="com.googleActRecognDataServer.api.postgres.ServicioPostgreSQL">
 
 	<insert id="nuevaActividad" parameterType="map">
 		INSERT INTO
@@ -24,48 +24,34 @@
 	</insert>
 
 	<!-- ************** READ ************** -->
-	<select id="cogerUltimaActividadPorIds"
-		resultType="com.googleActRecognDataServer.api.postgres.pojos.ActividadGoogle">
-		SELECT actividad, coeficiente
-		FROM actividad
-		WHERE
-		"advIdCliente" = #{ids.advIdCliente} AND
-		"insIdCliente" =
-		#{ids.insIdCliente} AND date_trunc('second',cast(_timestamp
-		as time)) =
-		(SELECT date_trunc('second',cast(_timestamp as time)) FROM
-		actividad
-		ORDER BY _timestamp DESC LIMIT 1);
-	</select>
 
-	<select id="cogerUltimaBanderaPorIds"
-		resultType="String">
-		SELECT bandera
-		FROM actividad
-		WHERE
-		"advIdCliente" =
-		#{ids.advIdCliente} AND
-		"insIdCliente" =
-		#{ids.insIdCliente} AND
-		date_trunc('second',cast(_timestamp
-		as time)) =
-		(SELECT
-		date_trunc('second',cast(_timestamp as time)) FROM
-		actividad
-		ORDER BY
-		_timestamp DESC LIMIT 1);
-	</select>
-
-	<select id="cogerActividadesUltimoDia"
+	<select id="cogerActividadesUltimoDia" 
 		resultType="com.googleActRecognDataServer.api.postgres.pojos.ActividadBandera">
-		SELECT actividad, bandera
+		SELECT actividad, bandera, _timestamp
 		FROM actividad
 		WHERE
-		(current_time::time -
-		_timestamp::time) <![CDATA[ <= interval
-		'1' day ]]>
+		((current_timestamp::timestamp-
+		_timestamp::timestamp) &lt;= interval
+		'10' day) AND (coeficiente &gt;= 70)
 		;
+	</select>
 
+	<select id="cogerActividadesUltimoDiaDeCliente" parameterType="map"
+		resultType="com.googleActRecognDataServer.api.postgres.pojos.ActividadBandera">
+		SELECT actividad, bandera, _timestamp
+		FROM actividad
+		WHERE
+		((current_timestamp::timestamp-
+		_timestamp::timestamp) &lt;= interval
+		'10' day) AND (coeficiente &gt;= 70) AND ("advIdCliente" =
+		#{ids.advIdCliente}) AND ("insIdCliente" = #{ids.insIdCliente})
+		;
+	</select>
+
+	<select id="cogerTodosClientes"
+		resultType="com.googleActRecognDataServer.api.postgres.pojos.IdsCliente">
+		SELECT *
+		FROM cliente;
 	</select>
 
 </mapper>

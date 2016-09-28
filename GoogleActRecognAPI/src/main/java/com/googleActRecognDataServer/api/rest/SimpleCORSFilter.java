@@ -10,23 +10,26 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-
+/**
+ * Clase donde se definen las propiedades del filtro CORS presenta en la API
+ * RESTful.
+ * 
+ * @author Javier Ruiz Rodríguez
+ *
+ */
 @Component
 public class SimpleCORSFilter extends OncePerRequestFilter {
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	protected void doFilterInternal(HttpServletRequest request,
-			HttpServletResponse response, FilterChain filterChain)
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
-		//Logback.log(this.getClass(), LogLevel.INFO, request.getRemoteHost()				+ " " + request.getMethod() + " " + request.getRequestURI());
-		response.setHeader("Access-Control-Expose-Headers",
-				"Content-Disposition,Content-Length,fileHash,sesion,fileHash,Set-Cookie,token,rol,not-added");
+		response.setHeader("Access-Control-Expose-Headers", "Bandera,advIdCliente,insIdCliente");
 		response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
-		response.setHeader("Access-Control-Allow-Credentials", "true");
-		response.setHeader("Access-Control-Allow-Methods",
-				"GET, POST, PUT, OPTIONS, DELETE");
-		response.setHeader("Access-Control-Allow-Headers",
-				request.getHeader("Access-Control-Request-Headers"));
+		response.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+		response.setHeader("Access-Control-Allow-Headers", request.getHeader("Access-Control-Request-Headers"));
 		if (request.getMethod().equals("OPTIONS")) {
 			try {
 				response.getWriter().print("OK");
