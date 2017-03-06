@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2017-01-17T06:18:13</date>
+  <millis>1484630293987</millis>
+  <sequence>6</sequence>
+  <logger>LogAccesoBBDD</logger>
+  <level>INFO</level>
+  <class>com.googleActRecognDataServer.api.postgres.daos.OperacionesIdClientes</class>
+  <method>insertarNuevoIdCliente</method>
+  <thread>28</thread>
+  <message>PK duplicada idCliente</message>
+</record>
+<record>
+  <date>2017-01-17T06:18:13</date>
+  <millis>1484630293987</millis>
+  <sequence>6</sequence>
+  <logger>LogAccesoBBDD</logger>
+  <level>INFO</level>
+  <class>com.googleActRecognDataServer.api.postgres.daos.OperacionesIdClientes</class>
+  <method>insertarNuevoIdCliente</method>
+  <thread>28</thread>
+  <message>PK duplicada idCliente</message>
+</record>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2017-01-17T06:19:34</date>
+  <millis>1484630374019</millis>
+  <sequence>6</sequence>
+  <logger>LogAccesoBBDD</logger>
+  <level>INFO</level>
+  <class>com.googleActRecognDataServer.api.postgres.daos.OperacionesIdClientes</class>
+  <method>insertarNuevoIdCliente</method>
+  <thread>28</thread>
+  <message>PK duplicada idCliente</message>
+</record>
+<record>
+  <date>2017-01-17T06:19:34</date>
+  <millis>1484630374019</millis>
+  <sequence>6</sequence>
+  <logger>LogAccesoBBDD</logger>
+  <level>INFO</level>
+  <class>com.googleActRecognDataServer.api.postgres.daos.OperacionesIdClientes</class>
+  <method>insertarNuevoIdCliente</method>
+  <thread>28</thread>
+  <message>PK duplicada idCliente</message>
+</record>
+<record>
+  <date>2017-01-17T06:19:37</date>
+  <millis>1484630377439</millis>
+  <sequence>7</sequence>
+  <logger>LogAccesoBBDD</logger>
+  <level>INFO</level>
+  <class>com.googleActRecognDataServer.api.postgres.daos.OperacionesIdClientes</class>
+  <method>insertarNuevoIdCliente</method>
+  <thread>30</thread>
+  <message>PK duplicada idCliente</message>
+</record>
+<record>
+  <date>2017-01-17T06:19:37</date>
+  <millis>1484630377439</millis>
+  <sequence>7</sequence>
+  <logger>LogAccesoBBDD</logger>
+  <level>INFO</level>
+  <class>com.googleActRecognDataServer.api.postgres.daos.OperacionesIdClientes</class>
+  <method>insertarNuevoIdCliente</method>
+  <thread>30</thread>
+  <message>PK duplicada idCliente</message>
+</record>
+<record>
+  <date>2017-01-17T06:19:37</date>
+  <millis>1484630377439</millis>
+  <sequence>7</sequence>
+  <logger>LogAccesoBBDD</logger>
+  <level>INFO</level>
+  <class>com.googleActRecognDataServer.api.postgres.daos.OperacionesIdClientes</class>
+  <method>insertarNuevoIdCliente</method>
+  <thread>30</thread>
+  <message>PK duplicada idCliente</message>
+</record>
+<record>
+  <date>2017-01-17T06:19:37</date>
+  <millis>1484630377439</millis>
+  <sequence>7</sequence>
+  <logger>LogAccesoBBDD</logger>
+  <level>INFO</level>
+  <class>com.googleActRecognDataServer.api.postgres.daos.OperacionesIdClientes</class>
+  <method>insertarNuevoIdCliente</method>
+  <thread>30</thread>
+  <message>PK duplicada idCliente</message>
+</record>
+<record>
+  <date>2017-01-17T06:19:42</date>
+  <millis>1484630382631</millis>
+  <sequence>8</sequence>
+  <logger>LogAccesoBBDD</logger>
+  <level>INFO</level>
+  <class>com.googleActRecognDataServer.api.postgres.daos.OperacionesIdClientes</class>
+  <method>insertarNuevoIdCliente</method>
+  <thread>32</thread>
+  <message>PK duplicada idCliente</message>
+</record>
+<record>
+  <date>2017-01-17T06:19:42</date>
+  <millis>1484630382631</millis>
+  <sequence>8</sequence>
+  <logger>LogAccesoBBDD</logger>
+  <level>INFO</level>
+  <class>com.googleActRecognDataServer.api.postgres.daos.OperacionesIdClientes</class>
+  <method>insertarNuevoIdCliente</method>
+  <thread>32</thread>
+  <message>PK duplicada idCliente</message>
+</record>
+<record>
+  <date>2017-01-17T06:19:42</date>
+  <millis>1484630382631</millis>
+  <sequence>8</sequence>
+  <logger>LogAccesoBBDD</logger>
+  <level>INFO</level>
+  <class>com.googleActRecognDataServer.api.postgres.daos.OperacionesIdClientes</class>
+  <method>insertarNuevoIdCliente</method>
+  <thread>32</thread>
+  <message>PK duplicada idCliente</message>
+</record>
+<record>
+  <date>2017-01-17T06:19:42</date>
+  <millis>1484630382631</millis>
+  <sequence>8</sequence>
+  <logger>LogAccesoBBDD</logger>
+  <level>INFO</level>
+  <class>com.googleActRecognDataServer.api.postgres.daos.OperacionesIdClientes</class>
+  <method>insertarNuevoIdCliente</method>
+  <thread>32</thread>
+  <message>PK duplicada idCliente</message>
+</record>
+<record>
+  <date>2017-01-17T06:19:42</date>
+  <millis>1484630382631</millis>
+  <sequence>8</sequence>
+  <logger>LogAccesoBBDD</logger>
+  <level>INFO</level>
+  <class>com.googleActRecognDataServer.api.postgres.daos.OperacionesIdClientes</class>
+  <method>insertarNuevoIdCliente</method>
+  <thread>32</thread>
+  <message>PK duplicada idCliente</message>
+</record>
+<record>
+  <date>2017-01-17T06:19:42</date>
+  <millis>1484630382631</millis>
+  <sequence>8</sequence>
+  <logger>LogAccesoBBDD</logger>
+  <level>INFO</level>
+  <class>com.googleActRecognDataServer.api.postgres.daos.OperacionesIdClientes</class>
+  <method>insertarNuevoIdCliente</method>
+  <thread>32</thread>
+  <message>PK duplicada idCliente</message>
+</record>

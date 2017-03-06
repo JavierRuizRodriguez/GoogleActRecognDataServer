@@ -1,7 +1,11 @@
 package com.googleActRecognDataServer.api.rest.controller;
 
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -13,12 +17,14 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.postgresql.util.PSQLException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import com.googleActRecognDataServer.api.postgres.daos.OperacionesActividades;
-import com.googleActRecognDataServer.api.postgres.daos.OperacionesIdClientes;
-import com.googleActRecognDataServer.api.postgres.pojos.ActividadGoogle;
-import com.googleActRecognDataServer.api.postgres.pojos.IdsCliente;
+import com.googleActRecognDataServer.api.cassandra.daos.BalizaCrud;
+import com.googleActRecognDataServer.api.cassandra.pojos.Baliza;
+import com.googleActRecognDataServer.api.pojos.ActividadGoogle;
+import com.googleActRecognDataServer.api.pojos.IdsCliente;
 
 /**
  * Controlador principal de la API RESTFul.
@@ -29,15 +35,9 @@ import com.googleActRecognDataServer.api.postgres.pojos.IdsCliente;
 @Path("/")
 public class BaseController {
 
-	/**
-	 * Objeto utilizado para la ejecución de scrpits la tabla 'actividad'.
-	 */
-	private OperacionesActividades opActividades = new OperacionesActividades();
-	/**
-	 * Objeto utilizado para la ejecución de scrpits la tabla 'cliente'.
-	 */
-	private OperacionesIdClientes opIdCliente = new OperacionesIdClientes();
-
+	@Autowired
+	private ApplicationContext applicationContext;
+	
 	/**
 	 * Endpoint GET que indica el estado de la API. Sirve para comprobar si la
 	 * API está o no levantada.
@@ -65,28 +65,29 @@ public class BaseController {
 	 */
 	@POST
 	@Path("data")
-	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.TEXT_HTML })
-	public Response nuevosDatos(ArrayList<ActividadGoogle> actividades, @Context HttpServletRequest peticion)
-			throws PSQLException {
+	public Response nuevosDatos(@Context HttpServletRequest peticion) {
+
+		Date fecha = new Date();
+		Baliza baliza = new Baliza(cogerFechaActual(),peticion.getHeader("advIdCliente"), peticion.getHeader("insIdCliente"),
+				new Timestamp(fecha.getTime()), peticion.getHeader("actividad"), peticion.getHeader("bandera"),Long.parseLong(peticion.getHeader("duracion")));
 
 		System.out.println("----- SINCRO DATOS NUEVOS -----");
 		mostrarDatosIdsEnConsola(peticion);
-		System.out.println("BANDERA --> " + peticion.getHeader("Bandera"));
-		IdsCliente ids = new IdsCliente(peticion.getHeader("advIdCliente"), peticion.getHeader("insIdCliente"));
 
-		if (actividades.size() != 0) {
+		BalizaCrud balizaCrud = applicationContext.getBean(BalizaCrud.class);
+		baliza = balizaCrud.añadirBaliza(baliza);
 
-			opIdCliente.insertarNuevoIdCliente(ids);
-			opActividades.insertarNuevasActividades(ids, actividades, peticion.getHeader("Bandera"));
-
-			return Response.status(201).entity("Datos recibidos.").build();
-
-		} else {
-			return Response.status(400).entity("ERROR").build();
-		}
+		return Response.status(201).entity("Datos recibidos.").build();
 
 	}
+
+	private String cogerFechaActual() {
+	        DateFormat formatoFecha = new SimpleDateFormat("dd-MM-yyyy");
+	        Calendar calendario = Calendar.getInstance();
+	        return formatoFecha.format(calendario.getTime());
+	}
+	
 
 	/**
 	 * Método para mostrar por la consola del servidor, los datos recibidos.
@@ -96,7 +97,10 @@ public class BaseController {
 	 */
 	private void mostrarDatosIdsEnConsola(HttpServletRequest peticion) {
 		System.out.println("RECIBIDO " + new Timestamp(new java.util.Date().getTime()));
-		System.out.println("ID cliente --> " + peticion.getHeader("advIdCliente"));
-		System.out.println("ID cliente --> " + peticion.getHeader("insIdCliente"));
+		System.out.println("ID adv cliente --> " + peticion.getHeader("advIdCliente"));
+		System.out.println("ID ins cliente --> " + peticion.getHeader("insIdCliente"));
+		System.out.println("-Actividad --> " + peticion.getHeader("actividad"));
+		System.out.println("- Bandera --> " + peticion.getHeader("bandera"));
+		System.out.println("- Duracion --> " + peticion.getHeader("duracion"));
 	}
 }

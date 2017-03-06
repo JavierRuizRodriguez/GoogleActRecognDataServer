@@ -1,4 +1,4 @@
-package com.googleActRecognDataServer.api.postgres.pojos;
+package com.googleActRecognDataServer.api.pojos;
 
 import org.rosuda.JRI.Rengine;
 
@@ -23,7 +23,7 @@ public class MotorR {
 	 * Cadena que representa la función personalizada encargada de tratar los
 	 * datos y convertirlos en las tablas necesarias.
 	 */
-	private static final String FUNCION_TRATAR_TABLA = "tratarTabla = function(tabla){tabla <- ddply(tabla,.(Actividad,Bandera),nrow); tabla$ActBan <- paste(tabla$Actividad,tabla$Bandera,sep=\"\n\"); tabla$Actividad = NULL; tabla$Bandera = NULL; colnames(tabla)[1] = \"Total\"; tabla <- tabla[order(tabla$Total, decreasing = TRUE),]}";
+	private static final String FUNCION_TRATAR_TABLA = "tratarTabla = function(tabla){tabla <- ddply(tabla,.(Actividad,Bandera,Duracion),nrow); tabla$ActBanDur <- paste(paste(tabla$Actividad,tabla$Bandera,sep=\"\n\"),tabla$Duracion,sep=\"\n\"); tabla$Actividad = NULL; tabla$Bandera = NULL; tabla$Duracion = NULL; colnames(tabla)[1] = \"Total\"; tabla <- tabla[order(tabla$Total, decreasing = TRUE),]}";
 	/**
 	 * Cadena que representa la función personalizada que, dependiendo de los
 	 * datos, genera un diagrama de tallo y hojas de una escala determinada.

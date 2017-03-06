@@ -20,6 +20,9 @@ public class DatosBanderasActividades {
 	 */
 	public static final String[] NOMBRE_ACTIVIDADES = { "Vehiculo", "Bicicleta", "Andando-Corriendo", "Corriendo",
 			"Parado", "Parado-Inclinado", "Caminando", "Desconocido" };
+	
+	
+	public static final String[] NOMBRE_DURACIONES = { "Muy_corto", "Corto", "Medio", "Largo", "Muy_largo"};
 
 	/**
 	 * Método para conseguir la posición de la bandera tomada.
@@ -55,6 +58,20 @@ public class DatosBanderasActividades {
 		for (String act : NOMBRE_ACTIVIDADES) {
 			if (seguirContado) {
 				if (!act.equalsIgnoreCase(actividad))
+					contador++;
+				else
+					seguirContado = false;
+			}
+		}
+		return contador;
+	}
+
+	public static int getIdDuracion(String duracion) {
+		int contador = 0;
+		boolean seguirContado = true;
+		for (String act : NOMBRE_DURACIONES) {
+			if (seguirContado) {
+				if (!act.equalsIgnoreCase(duracion))
 					contador++;
 				else
 					seguirContado = false;

@@ -1,4 +1,4 @@
-package com.googleActRecognDataServer.api.postgres.pojos;
+package com.googleActRecognDataServer.api.pojos;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

@@ -2,6 +2,7 @@ package com.googleActRecognDataServer.api;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.liquibase.LiquibaseAutoConfiguration;
 import org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration;
 
 /**
@@ -11,7 +12,7 @@ import org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration
  * @author Javier Ruiz Rodríguez
  * 
  */
-@SpringBootApplication(exclude = { SecurityAutoConfiguration.class })
+@SpringBootApplication(exclude = { SecurityAutoConfiguration.class, LiquibaseAutoConfiguration.class})
 public class Aplicacion {
 
 	/**

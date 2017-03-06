@@ -1,4 +1,4 @@
-package com.googleActRecognDataServer.api.postgres.pojos;
+package com.googleActRecognDataServer.api.pojos;
 
 /**
  * Clase que representa una tupla con los IDs que identifican cada dispositivo.

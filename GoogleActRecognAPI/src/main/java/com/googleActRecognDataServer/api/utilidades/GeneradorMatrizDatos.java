@@ -9,15 +9,20 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 
-import com.googleActRecognDataServer.api.postgres.PostgreSQL;
-import com.googleActRecognDataServer.api.postgres.pojos.ActividadBandera;
-import com.googleActRecognDataServer.api.postgres.pojos.ContadorInformes;
-import com.googleActRecognDataServer.api.postgres.pojos.IdsCliente;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+
+import com.googleActRecognDataServer.api.cassandra.daos.BalizaCrud;
+import com.googleActRecognDataServer.api.cassandra.pojos.Baliza;
+import com.googleActRecognDataServer.api.pojos.ContadorInformes;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
@@ -43,11 +48,19 @@ public class GeneradorMatrizDatos {
 	 */
 	private PrintWriter escritorTxt;
 
+	private ArrayList<Baliza> balizas;
+
+	private final long CORTO = 15000;
+	private final long MEDIO = 45000;
+	private final long LARGO = 90000;
+	private final long MUY_LARGO = 300000;
+
 	/**
 	 * Constructor de clase.
 	 */
-	public GeneradorMatrizDatos() {
-
+	public GeneradorMatrizDatos(ApplicationContext applicationContext) {
+		BalizaCrud balizaCrud = applicationContext.getBean(BalizaCrud.class);
+		balizas = new ArrayList<>(balizaCrud.cogerTodasBalizasUltimoDia());
 	}
 
 	/**
@@ -72,15 +85,20 @@ public class GeneradorMatrizDatos {
 	private void montarCuerpoMatriz() {
 		int idBandera;
 		int idActividad;
-		ArrayList<ActividadBandera> actividades = new ArrayList<>(
-				PostgreSQL.getInterfazPostgreSQL().cogerActividadesUltimoDia());
-		for (ActividadBandera tupla : actividades) {
-			idBandera = DatosBanderasActividades.getIdBandera(tupla.getBandera());
-			idActividad = DatosBanderasActividades.getIdActividad(tupla.getActividad());
-			String fila = crearCadenaBinaria(idActividad, idBandera);
-			fila = fila.substring(0, fila.length() - 1);
-			escritorTxt.print(fila);
-			escritorTxt.println();
+		int idDuracion;
+
+		if (balizas != null && balizas.size() > 0) {
+			for (Baliza baliza : balizas) {
+				idBandera = DatosBanderasActividades.getIdBandera(baliza.getBandera());
+				idActividad = DatosBanderasActividades.getIdActividad(baliza.getActividad());
+				idDuracion = DatosBanderasActividades.getIdDuracion(filtrarTiempo(baliza.duracion));
+				
+				String fila = crearCadenaBinaria(idActividad, idBandera, idDuracion);
+				fila = fila.substring(0, fila.length() - 1);
+				
+				escritorTxt.print(fila);
+				escritorTxt.println();
+			}
 		}
 	}
 
@@ -89,18 +107,22 @@ public class GeneradorMatrizDatos {
 	 * matriz.
 	 * 
 	 * @param idActividad
-	 *            entero que representa la posicion de la actividad dentro de la
+	 *            entero que representa la posición de la actividad dentro de la
 	 *            cabecera de la matriz
 	 * @param idBandera
-	 *            entero que representa la posicion de la bandera dentro de la
+	 *            entero que representa la posición de la bandera dentro de la
+	 *            cabecera de la matriz
+	 * @param idDuracion
+	 *            entero que representa la posición de la bandera dentro de la
 	 *            cabecera de la matriz
 	 * @return cadena binaria que representa una fila de la matriz
 	 */
-	private String crearCadenaBinaria(int idActividad, int idBandera) {
+	private String crearCadenaBinaria(int idActividad, int idBandera, int idDuracion) {
 		String cadenaBinaria = "";
 		for (int i = 0; i <= (DatosBanderasActividades.NOMBRE_ACTIVIDADES.length
-				+ DatosBanderasActividades.NOMBRE_BANDERAS.length - 1); i++) {
-			if (i == idActividad || i == idBandera)
+				+ DatosBanderasActividades.NOMBRE_BANDERAS.length + DatosBanderasActividades.NOMBRE_DURACIONES.length
+				- 1); i++) {
+			if (i == idActividad || i == idBandera || i == idDuracion)
 				cadenaBinaria += "1 ";
 			else
 				cadenaBinaria += "0 ";
@@ -116,6 +138,8 @@ public class GeneradorMatrizDatos {
 		for (String cadena : DatosBanderasActividades.NOMBRE_ACTIVIDADES)
 			cabecera += cadena + " ";
 		for (String cadena : DatosBanderasActividades.NOMBRE_BANDERAS)
+			cabecera += cadena + " ";
+		for (String cadena : DatosBanderasActividades.NOMBRE_DURACIONES)
 			cabecera += cadena + " ";
 
 		cabecera = cabecera.substring(0, cabecera.length() - 1);
@@ -138,22 +162,23 @@ public class GeneradorMatrizDatos {
 	/**
 	 * Método de generación de la tabla de datos que se usará en el entorno R.
 	 */
+
 	public void montarTablaDatos() {
 		try {
 			this.escritorTxt = new PrintWriter("datosR/matriz.txt", "UTF-8");
 		} catch (FileNotFoundException | UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		escritorTxt.println("Actividad Bandera Cliente");
-		ArrayList<IdsCliente> clientes = new ArrayList<>(PostgreSQL.getInterfazPostgreSQL().cogerTodosClientes());
-		int contadorClientes = 0;
-		for (IdsCliente cliente : clientes) {
-			contadorClientes++;
-			for (ActividadBandera tupla : PostgreSQL.getInterfazPostgreSQL()
-					.cogerActividadesUltimoDiaDeCliente(cliente)) {
-				escritorTxt.print(tupla.actividad.toString() + " " + tupla.bandera.toString() + " " + contadorClientes);
-				escritorTxt.println();
-			}
+
+		//Collections.reverse(balizas);
+
+		escritorTxt.print("Actividad Bandera Cliente Duracion");
+		escritorTxt.println();
+
+		for (Baliza b : balizas) {
+			escritorTxt.print(b.actividad.toString() + " " + b.bandera.toString() + " " + b.cogerIdsConcatenados() + " "
+					+ filtrarTiempo(b.duracion));
+			escritorTxt.println();
 		}
 		escritorTxt.close();
 	}
@@ -192,7 +217,7 @@ public class GeneradorMatrizDatos {
 		doc.add(parrafoTitulo1);
 		doc.add(parrafoTitulo2);
 
-		for (int i = 1; i <= 9; i++) {
+		for (int i = 1; i <= pdfLectura.getNumberOfPages(); i++) {
 			doc.newPage();
 			if (i == 9) {
 				Paragraph p = new Paragraph("DIAGRAMA CLASIFICACION SUPERVISADA SOBRE VARIABLE BANDERA", fuenteTitulo2);
@@ -220,6 +245,20 @@ public class GeneradorMatrizDatos {
 
 		borrarArchivo("datosR/informe.txt");
 		borrarArchivo("datosR/grafico.pdf");
+	}
+
+	private String filtrarTiempo(long duracion) {
+
+		if (duracion <= CORTO)
+			return "MUY_CORTO";
+		else if (duracion <= MEDIO)
+			return "CORTO";
+		else if (duracion <= LARGO)
+			return "MEDIO";
+		else if (duracion <= MUY_LARGO)
+			return "LARGO";
+		else
+			return "MUY_LARGO";
 	}
 
 }

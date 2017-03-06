@@ -1,4 +1,4 @@
-package com.googleActRecognDataServer.api.postgres.pojos;
+package com.googleActRecognDataServer.api.pojos;
 
 /**
  * POJO para la lectura sobre la base de datos de la tupla actividad y bandera.

@@ -1,4 +1,4 @@
-package com.googleActRecognDataServer.api.postgres.pojos;
+package com.googleActRecognDataServer.api.pojos;
 
 /**
  * Clase que representa la actividad y el coeficiente de dicha actividad, para
